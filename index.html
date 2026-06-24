@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart-Grocer Board (SGB) - Kedai Runcit Masa Hadapan</title>
-    <!-- Memanggil Library Pengimbas QR Versi Stabil Khas Peranti Mudah Alih -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js" type="text/javascript"></script>
     <style>
         :root {
@@ -31,7 +30,7 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
-        h1 {
+        <h1> {
             text-align: center;
             color: var(--primary);
             font-size: 24px;
@@ -211,7 +210,6 @@
     <h1>Smart-Grocer Board (SGB) 🛒</h1>
     <div class="subtitle">Minda Inovatif, Jiwa Adaptif | Sukma Pendidik 2035</div>
 
-    <!-- Zon Imbasan Kamera -->
     <div class="game-zone">
         <label style="text-align: left; display: block; font-weight: bold;">Acukan Kod QR Barang Pada Kamera:</label>
         
@@ -237,7 +235,6 @@
         <button class="btn btn-clear" onclick="kosongkanBakul()">Kosongkan Bakul</button>
     </div>
 
-    <!-- Zon Pengiraan Juruwang -->
     <div class="calc-section">
         <h3>Sistem Semakan Juruwang Bijak</h3>
         
@@ -263,12 +260,14 @@
 </div>
 
 <script>
+    // Pangkalan data produk - Dubai Chewy Cookie telah berjaya dimasukkan ke dalam sistem
     const dataBarang = {
         "biskut": { nama: "Biskut Serat Sihat", hargaAsal: 4.50, situasi: "Promosi: Potongan RM 0.50", beza: -0.50 },
         "pensel": { nama: "Pensel 2B Lestari", hargaAsal: 1.20, situasi: "Cukai: Tambah RM 0.10", beza: 0.10 },
         "roti":   { nama: "Roti Gandum Penuh", hargaAsal: 3.20, situasi: "Subsidi: Potongan RM 0.20", beza: -0.20 },
         "buku":   { nama: "Buku Tulis Garis Tiga", hargaAsal: 2.00, situasi: "Tiada Perubahan Harga", beza: 0.00 },
-        "susu":   { nama: "Susu Kotak Kalsium Tinggi", hargaAsal: 5.80, situasi: "Inflasi: Tambah RM 0.40", beza: 0.40 }
+        "susu":   { nama: "Susu Kotak Kalsium Tinggi", hargaAsal: 5.80, situasi: "Inflasi: Tambah RM 0.40", beza: 0.40 },
+        "dubai":  { nama: "Dubai Chewy Cookie", hargaAsal: 15.00, situasi: "Produk Viral: Tiada Perubahan Harga", beza: 0.00 }
     };
 
     let bakulBelanja = [];
@@ -280,7 +279,7 @@
         const token = decodedText.toLowerCase().trim();
         const currentTime = Date.now();
         
-        // PENTING: Anti-spam dikecilkan sedikit ke 1.5 saat untuk respons lebih pantas
+        // Anti-spam respons pantas (1.5 saat)
         if (token === lastScannedToken && (currentTime - lastScannedTime < 1500)) {
             return;
         }
@@ -300,7 +299,7 @@
             document.getElementById("situation").innerHTML = `✅ Berjaya Scan: <b>${barang.nama}</b> (${barang.situasi})`;
             kemasKiniPaparanBakul();
         } else {
-            // Jika kod QR mengandungi data mentah selain teks tepat, ia cuba mencari sub-string
+            // Logik toleransi mengesan sub-string dalam kod QR rawak
             for (let kunci in dataBarang) {
                 if (token.includes(kunci)) {
                     onScanSuccess(kunci, decodedResult);
@@ -344,18 +343,17 @@
         kemasKiniPaparanBakul();
     }
 
-    // PENEKANAN KESTABILAN ENGINE (v2.3.8)
-    // Menggunakan konfigurasi imbasan bingkai penuh tanpa sekatan kotak tegar (meningkatkan kebarangkalian bacaan)
+    // Konfigurasi Engine Pengimbas Kamera (html5-qrcode v2.3.8)
     let html5QrcodeScanner = new Html5QrcodeScanner(
         "reader", { 
-            fps: 20,                  // Dinaikkan ke 20 FPS untuk tracking lebih laju
+            fps: 20,                  // 20 FPS untuk pengesanan kod QR yang ultra-pantas
             experimentalFeatures: {
-                useBarCodeDetectorIfSupported: true // Memanfaatkan perkakasan native peranti jika ada
+                useBarCodeDetectorIfSupported: true // Memanfaatkan keupayaan dekoder native peranti
             },
             rememberLastUsedCamera: true
         }, false);
     
-    html5QrcodeScanner.render(onScanSuccess, function(err){/* Diamkan ralat bingkai kosong */});
+    html5QrcodeScanner.render(onScanSuccess, function(err){/* Meredam ralat log pemfokusan bingkai kosong */});
 
     function semakKiraan() {
         const bayaran = parseFloat(document.getElementById("bayaran").value);
@@ -382,6 +380,7 @@
             return;
         }
 
+        // Memaparkan pengiraan interaktif berbentuk jalan kerja tradisional (Bentuk Lazim)
         paparanBentukLazim.parentElement.style.display = "flex";
         paparanBentukLazim.innerHTML = `
             <div>RM ${bayaran.toFixed(2).padStart(6, ' ')}</div>
